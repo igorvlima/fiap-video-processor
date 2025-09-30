@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiap-video-processor
+  namespace: fiap-x
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fiap-video-processor
+  template:
+    metadata:
+      labels:
+        app: fiap-video-processor
+    spec:
+      containers:
+        - name: fiap-video-processor
+          image: igorvlima/fiap-video-processor:1.0.13
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: fiap-video-processor-config
+            - secretRef:
+                name: aws-credentials
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
